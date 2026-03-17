@@ -2,8 +2,13 @@ import { createTwoFilesPatch } from 'diff';
 import type { FileMap } from '~/lib/stores/files';
 import { MODIFICATIONS_TAG_NAME } from './constants';
 
+// Matches the <bolt_file_modifications> block anywhere in the text.
+// The previous pattern anchored the tag to the start of the string which meant
+// user messages containing the model/provider preamble wouldn't be cleaned up
+// correctly. By removing the beginning anchor we allow stripping the block no
+// matter where it appears.
 export const modificationsRegex = new RegExp(
-  `^<${MODIFICATIONS_TAG_NAME}>[\\s\\S]*?<\\/${MODIFICATIONS_TAG_NAME}>\\s+`,
+  `<${MODIFICATIONS_TAG_NAME}>[\\s\\S]*?<\\/${MODIFICATIONS_TAG_NAME}>\\s*`,
   'g',
 );
 
